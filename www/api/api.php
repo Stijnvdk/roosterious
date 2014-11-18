@@ -237,6 +237,19 @@ Flight::route('GET /schedule/datetime/now.@sFormat', function($sFormat){
     }	
 });
 
+/**
+* Get's the schedule per class per activity
+*/
+Flight::route('GET /schedule/class/@@sClassId/activity/@sActivityId\.@sFormat', function($ClassId, $sActivityId, $sFormat){
+    $oMysqli = getMysqli();
+    $sQuery = generateScheduleQuery("FROM lesson, lessonclasses WHERE lesson.id = lessonrooms.lesson_id AND activity_id = \"" . $sActivityId . "\" AND class_id = \"" . $class_id . "\" AND date >= " . getFromDateString() . " ORDER BY date, starttime");
+    
+    if ($oResult = $oMysqli->query($sQuery)) {
+      echo formatScheduleResult($sFormat, $oResult, $sActivityId, "Opgebouwd vanuit Roosterious", $sActivityId); 
+    } else {
+      echo errorInFormat($sFormat);
+    }
+});
 
 
 /**
